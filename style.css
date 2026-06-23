@@ -105,3 +105,26 @@ button:not(.selected) {
   font-size: 14px;
   font-weight: 700;
 }
+
+.date-filter {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.date-filter button {
+  width: auto;
+  white-space: nowrap;
+  margin-top: 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: #333;
+  color: #fff;
+}
+
+.date-filter button.active {
+  background: #f5f5f5;
+  color: #111;
+}

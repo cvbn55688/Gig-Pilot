@@ -1,29 +1,36 @@
 import { performances } from "./performances.js";
+import { getDateKey, formatDateLabel, formatTime } from "./time-helper.js";
 
 const storagePerformanceKey = "selected-performance-ids";
 const stageStorageKey = "selected-stage";
+const dateStorageKey = "selected-date";
 
-let selectedStage = localStorage.getItem(stageStorageKey) || "全部";
-let selectedIds = new Set(
-  JSON.parse(localStorage.getItem(storagePerformanceKey) || "[]"),
+const sortedDatePerformances = performances.sort(
+  (a, b) => new Date(a.startsAt) - new Date(b.startsAt),
 );
 
 const allStages = [
   "全部",
   ...new Set(
     performances
-      .map((performance) => performance.stage)
-      .sort((a, b) => a.id - b.id),
+      .sort((a, b) => a.id.split("-")[0] - b.id.split("-")[0])
+      .map((performance) => performance.stage),
   ),
 ];
 
-function formatTime(value) {
-  return new Intl.DateTimeFormat("zh-TW", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(value));
-}
+const allDates = [
+  ...new Set(
+    sortedDatePerformances.map((performance) =>
+      getDateKey(performance.startsAt),
+    ),
+  ),
+];
+
+let selectedStage = localStorage.getItem(stageStorageKey) || "全部";
+let selectedIds = new Set(
+  JSON.parse(localStorage.getItem(storagePerformanceKey) || "[]"),
+);
+let selectedDate = localStorage.getItem(dateStorageKey) || allDates[0];
 
 function saveSelectedIds() {
   localStorage.setItem(storagePerformanceKey, JSON.stringify([...selectedIds]));
@@ -72,9 +79,13 @@ function createPerformanceCard(performance) {
   return card;
 }
 
-function getSelectedPerformances() {
-  return performances
-    .filter((performance) => selectedIds.has(performance.id))
+function getSelectedPerformances(date = selectedDate) {
+  return sortedDatePerformances
+    .filter(
+      (performance) =>
+        selectedIds.has(performance.id) &&
+        getDateKey(performance.startsAt) === date,
+    )
     .sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
 }
 
@@ -82,18 +93,42 @@ function renderTimetable() {
   const timetable = document.querySelector("#timetable");
   timetable.innerHTML = "";
 
-  const copyPerformances = [...performances];
+  const specifyDatePerformance = sortedDatePerformances.filter(
+    (performance) => {
+      return getDateKey(performance.startsAt) === selectedDate;
+    },
+  );
 
-  const filteredPerformances = (
+  const filteredPerformances =
     selectedStage === "全部"
-      ? copyPerformances
-      : copyPerformances.filter(
+      ? specifyDatePerformance
+      : specifyDatePerformance.filter(
           (performance) => performance.stage === selectedStage,
-        )
-  ).sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
+        );
 
   filteredPerformances.forEach((performance) => {
     timetable.appendChild(createPerformanceCard(performance));
+  });
+}
+
+function renderDateFilter() {
+  const container = document.querySelector("#date-filter");
+  container.innerHTML = "";
+
+  allDates.forEach((date) => {
+    const button = document.createElement("button");
+
+    button.textContent = formatDateLabel(date);
+    button.className = selectedDate === date ? "active" : "";
+
+    button.addEventListener("click", () => {
+      selectedDate = date;
+      localStorage.setItem(dateStorageKey, selectedDate);
+
+      render();
+    });
+
+    container.appendChild(button);
   });
 }
 
@@ -150,7 +185,7 @@ function renderNextPerformance() {
 
   if (!next) {
     container.className = "card empty";
-    container.innerHTML = "沒有下一場，或活動時間尚未設定為今天";
+    container.innerHTML = "沒有下一場";
     return;
   }
 
@@ -185,12 +220,13 @@ function renderStageFilter() {
 }
 
 function render() {
-  renderStageFilter();
+  renderDateFilter();
   renderNextPerformance();
   renderMySchedule();
   renderTimetable();
 }
 
+renderStageFilter();
 render();
 
 setInterval(() => {
