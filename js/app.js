@@ -99,13 +99,13 @@ function renderTimetable() {
     },
   );
 
-  const filteredPerformances =
+  const filteredPerformances = (
     selectedStage === "全部"
       ? specifyDatePerformance
       : specifyDatePerformance.filter(
           (performance) => performance.stage === selectedStage,
-        );
-
+        )
+  ).sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
   filteredPerformances.forEach((performance) => {
     timetable.appendChild(createPerformanceCard(performance));
   });
