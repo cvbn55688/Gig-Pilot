@@ -38,8 +38,11 @@ function saveSelectedIds() {
 
 /**
  * Add or cancel the performance.
+ * Keep the clicked card at the same viewport position after re-rendering.
  */
-function togglePerformance(id) {
+function togglePerformance(id, anchorCard) {
+  const previousTop = anchorCard.getBoundingClientRect().top;
+
   if (selectedIds.has(id)) {
     selectedIds.delete(id);
   } else {
@@ -48,6 +51,13 @@ function togglePerformance(id) {
 
   saveSelectedIds();
   render();
+
+  const newAnchorCard = document.querySelector(`[data-performance-id="${id}"]`);
+
+  if (!newAnchorCard) return;
+
+  const newTop = newAnchorCard.getBoundingClientRect().top;
+  window.scrollBy(0, newTop - previousTop);
 }
 
 function createPerformanceCard(performance) {
@@ -55,6 +65,7 @@ function createPerformanceCard(performance) {
 
   const card = document.createElement("div");
   card.className = "card";
+  card.dataset.performanceId = performance.id;
 
   card.innerHTML = `
         <div class="card-header">
@@ -73,7 +84,7 @@ function createPerformanceCard(performance) {
       `;
 
   card.querySelector("button").addEventListener("click", () => {
-    togglePerformance(performance.id);
+    togglePerformance(performance.id, card);
   });
 
   return card;
