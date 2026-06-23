@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gig Pilot</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <main class="app">
+      <header>
+        <h1>風神祭 2026</h1>
+        <p>我的聽團行程助手</p>
+      </header>
+
+      <section>
+        <h2>下一場</h2>
+        <div id="next-performance" class="card empty">還沒有選擇行程</div>
+      </section>
+
+      <section>
+        <h2>我的行程</h2>
+        <div id="my-schedule"></div>
+      </section>
+
+      <section>
+        <h2>全部 Time Table</h2>
+        <div id="stage-filter" class="stage-filter"></div>
+        <div id="timetable"></div>
+      </section>
+    </main>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

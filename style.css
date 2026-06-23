@@ -1,0 +1,107 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #111;
+  color: #f5f5f5;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  margin-bottom: 4px;
+}
+
+h2 {
+  margin-top: 24px;
+  font-size: 18px;
+}
+
+.card {
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: #222;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.artist {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.meta {
+  margin-top: 6px;
+  color: #bbb;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+button.selected {
+  background: #f5f5f5;
+  color: #111;
+}
+
+button:not(.selected) {
+  background: #444;
+  color: #fff;
+}
+
+.empty {
+  color: #aaa;
+}
+
+.stage-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.stage-filter button {
+  width: auto;
+  white-space: nowrap;
+  margin-top: 0;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #333;
+  color: #fff;
+}
+
+.stage-filter button.active {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.card.conflict {
+  border: 2px solid #ff4d4f;
+}
+
+.conflict-text {
+  margin-top: 8px;
+  color: #ff7875;
+  font-size: 14px;
+  font-weight: 700;
+}
