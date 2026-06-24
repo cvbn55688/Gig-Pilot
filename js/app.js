@@ -241,20 +241,15 @@ renderStageFilter();
 render();
 
 setInterval(() => {
-  console.log("XD1");
   renderNextPerformance();
 }, 30 * 1000);
 
 document.addEventListener("visibilitychange", () => {
-  console.log("XD2");
-
   if (!document.hidden) {
     renderNextPerformance();
   }
 });
 
 window.addEventListener("focus", () => {
-  console.log("XD3");
-
   renderNextPerformance();
 });
